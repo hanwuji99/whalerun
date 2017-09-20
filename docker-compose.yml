@@ -1,0 +1,58 @@
+version: "3"
+
+services:
+
+  user:
+    build: ./user
+    command: ./wait-for-it.sh user-db:3306 --strict -- gunicorn run:app -b 0.0.0.0:80 --log-file - --access-logfile -
+    environment:
+      - PROJECT_DOMAIN=${PROJECT_DOMAIN}
+      - FLASK_MYSQL_HOST=user-db
+      - FLASK_MYSQL_PASSWORD=${MYSQL_ROOT_PASSWORD:-whalerun}
+      - FLASK_REDIS_HOST=redis
+      - FLASK_REDIS_DB=${USER_REDIS_DB}
+      - CELERY_BROKER_DB=${USER_BROKER_DB}
+      - CELERY_BACKEND_DB=${USER_BACKEND_DB}
+      - SMTP_FROM_ADDR=${SMTP_FROM_ADDR}
+      - SMTP_PASSWORD=${SMTP_PASSWORD}
+      - DES_KEY=${DES_KEY}
+    restart: on-failure
+    depends_on:
+      - user-db
+
+#  user-celery:
+#    build: ./user
+#    command: ./wait-for-it.sh user-db:3306 --strict -- celery worker -A run.celery -l INFO -f celery.log
+#    environment:
+#      - C_FORCE_ROOT=true
+#      - PROJECT_DOMAIN=${PROJECT_DOMAIN}
+#      - FLASK_MYSQL_HOST=user-db
+#      - FLASK_MYSQL_PASSWORD=${MYSQL_ROOT_PASSWORD:-whalerun}
+#      - FLASK_REDIS_HOST=redis
+#      - FLASK_REDIS_DB=${USER_REDIS_DB}
+#      - CELERY_BROKER_DB=${USER_BROKER_DB}
+#      - CELERY_BACKEND_DB=${USER_BACKEND_DB}
+#      - SMTP_FROM_ADDR=${SMTP_FROM_ADDR}
+#      - SMTP_PASSWORD=${SMTP_PASSWORD}
+#      - DES_KEY=${DES_KEY}
+#    restart: on-failure
+#    depends_on:
+#      - user-db
+#      - redis
+
+  user-db:
+    image: lvyaoo/mysql:5.7
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD:-whalerun}
+      - MYSQL_DATABASE=whalerun_user
+    restart: on-failure
+    ports:
+      - "3316:3306"
+    volumes:
+      - ${PERSISTENCE_DIR}/user-db:/var/lib/mysql
+#
+#  redis:
+#    image: redis:3.2
+#    restart: on-failure
+#    volumes:
+#      - ${PERSISTENCE_DIR}/redis:/data
