@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-
 import time
 import datetime
 import random
@@ -17,59 +16,61 @@ from ...utils.pattern_util import check_email
 
 from flask import Flask, redirect, url_for, session, request, jsonify
 from flask_oauthlib.client import OAuth
-
+from .import App
 # global github_oauth
 # oauth = github_oauth.get_oauth()
-#
-# global app
-# app.secret_key = 'development'
-#
-# github = oauth.remote_app(
-#     'github',
-#     consumer_key='1ec3398f773522ea93a2',
-#     consumer_secret='356740a0ba53c57de3ef794850bedcf61bd84ef3',
-#     request_token_params={'scope': 'user:email'},
-#     base_url='https://api.github.com/',
-#     request_token_url=None,
-#     access_token_method='POST',
-#     access_token_url='https://github.com/login/oauth/access_token',
-#     authorize_url='https://github.com/login/oauth/authorize'
-# )
+# global makeapp
+# app = makeapp.get_app()
+app = App.get_app()
+app.debug = True
+app.secret_key = 'development'
+oauth = OAuth(app)
 
-# @app.route('/index')
-# def index():
-#     if 'github_token' in session:
-#         me = github.get('user')
-#         print "me",me
-#         return jsonify(me.data)
-#     return redirect(url_for('github_login'))
-#
-#
-# @app.route('/users/github_login')
-# def github_login():
-#     return github.authorize(callback=url_for('github_authorized', _external=True))
-#
-# @app.route('/users/github_login/authorized')
-# def github_authorized():
-#     resp = github.authorized_response()
-#     if resp is None or resp.get('access_token') is None:
-#         return 'Access denied: reason=%s error=%s resp=%s' % (
-#             request.args['error'],
-#             request.args['error_description'],
-#             resp
-#         )
-#     session['github_token'] = (resp['access_token'], '')
-#     me = github.get('user')
-#     return jsonify(me.data)
-#
-# @app.route('/users/logout')
-# def logout():
-#     session.pop('github_token', None)
-#     return redirect(url_for('index'))
-#
-# @github.tokengetter
-# def get_github_oauth_token():
-#     return session.get('github_token')
+github = oauth.remote_app(
+    'github',
+    consumer_key='1ec3398f773522ea93a2',
+    consumer_secret='356740a0ba53c57de3ef794850bedcf61bd84ef3',
+    request_token_params={'scope': 'user:email'},
+    base_url='https://api.github.com/',
+    request_token_url=None,
+    access_token_method='POST',
+    access_token_url='https://github.com/login/oauth/access_token',
+    authorize_url='https://github.com/login/oauth/authorize'
+)
+
+@app.route('/index')
+def index():
+    if 'github_token' in session:
+        me = github.get('user')
+        return jsonify(me.data)
+    return redirect(url_for('github_login'))
+
+
+@app.route('/users/github_login')
+def github_login():
+    return github.authorize(callback=url_for('github_authorized', _external=True))
+
+@app.route('/users/github_login/authorized')
+def github_authorized():
+    resp = github.authorized_response()
+    if resp is None or resp.get('access_token') is None:
+        return 'Access denied: reason=%s error=%s resp=%s' % (
+            request.args['error'],
+            request.args['error_description'],
+            resp
+        )
+    session['github_token'] = (resp['access_token'], '')
+    me = github.get('user')
+    return jsonify(me.data)
+
+@app.route('/users/logout')
+def logout():
+    session.pop('github_token', None)
+    return redirect(url_for('index'))
+
+@github.tokengetter
+def get_github_oauth_token():
+    return session.get('github_token')
 
 
 @bp_api.route('/current_user/', methods=['GET'])
