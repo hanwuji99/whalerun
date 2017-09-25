@@ -4,7 +4,6 @@ from flask import Blueprint
 
 from ...api_utils import *
 
-
 bp_api = Blueprint('bp_api', __name__)
 
 bp_api.register_error_handler(APIException, handle_api_exception)
@@ -15,6 +14,7 @@ bp_api.register_error_handler(404, handle_404_error)
 bp_api.register_error_handler(500, handle_500_error)
 bp_api.before_request(before_api_request)
 from . import views
+
 
 #
 # class Oauth(object):
@@ -39,6 +39,7 @@ from . import views
 
 class App(object):
     app = None
+
     def set_app(app):
         App.app = app
 
