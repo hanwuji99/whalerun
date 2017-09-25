@@ -16,7 +16,8 @@ from ...utils.pattern_util import check_email
 
 from flask import Flask, redirect, url_for, session, request, jsonify
 from flask_oauthlib.client import OAuth
-from ..api import App
+from . import App
+
 # global github_oauth
 # oauth = github_oauth.get_oauth()
 # global makeapp
@@ -38,6 +39,7 @@ github = oauth.remote_app(
     authorize_url='https://github.com/login/oauth/authorize'
 )
 
+
 @app.route('/index')
 def index():
     if 'github_token' in session:
@@ -49,6 +51,7 @@ def index():
 @app.route('/users/github_login')
 def github_login():
     return github.authorize(callback=url_for('github_authorized', _external=True))
+
 
 @app.route('/users/github_login/authorized')
 def github_authorized():
@@ -63,10 +66,12 @@ def github_authorized():
     me = github.get('user')
     return jsonify(me.data)
 
+
 @app.route('/users/logout')
 def logout():
     session.pop('github_token', None)
     return redirect(url_for('index'))
+
 
 @github.tokengetter
 def get_github_oauth_token():
@@ -221,7 +226,8 @@ def update_user_password():
     修改用户密码
     :return:
     """
-    user_id, email, code, password_old, password_new = map(g.json.get, ('user_id', 'email', 'code', 'password_old', 'password_new'))
+    user_id, email, code, password_old, password_new = map(g.json.get,
+                                                           ('user_id', 'email', 'code', 'password_old', 'password_new'))
     claim_args_true(1401, any([user_id, email]), any([code, password_old]))
     claim_args(1401, password_new)
     claim_args_string(1402, password_new)
@@ -232,7 +238,8 @@ def update_user_password():
         claim_args_string(1402, code)
         captcha = Captcha.query_latest_captcha(user, 1)
         claim_args_true(1415, captcha and captcha.code == code)
-        claim_args_true(1416, captcha.create_time + datetime.timedelta(minutes=CAPTCHA_VALID_MINS) > datetime.datetime.now())
+        claim_args_true(1416,
+                        captcha.create_time + datetime.timedelta(minutes=CAPTCHA_VALID_MINS) > datetime.datetime.now())
     elif password_old:
         claim_args_string(1402, password_old)
         claim_args_true(1413, user.check_password(password_old))
@@ -327,12 +334,6 @@ def check_captcha():
     claim_args_true(1411, user)
     captcha = Captcha.query_latest_captcha(user, group)
     claim_args_true(1415, captcha and captcha.code == code)
-    claim_args_true(1416, captcha.create_time + datetime.timedelta(minutes=CAPTCHA_VALID_MINS) > datetime.datetime.now())
+    claim_args_true(1416,
+                    captcha.create_time + datetime.timedelta(minutes=CAPTCHA_VALID_MINS) > datetime.datetime.now())
     return api_success_response({})
-
-
-
-
-
-
-
