@@ -5,7 +5,6 @@ import random
 
 from flask import request, g
 
-from . import bp_api
 from ...models import User, Captcha
 from ...api_utils import *
 from ...constants import MIN_PASSWORD_LEN, MAX_PASSWORD_LEN, USER_TOKEN_TAG, USER_LOGIN_VALID_DAYS, CAPTCHA_CODE_LEN, \
