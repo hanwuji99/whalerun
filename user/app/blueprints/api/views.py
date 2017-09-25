@@ -15,7 +15,7 @@ from ...utils.pattern_util import check_email
 
 from flask import Flask, redirect, url_for, session, request, jsonify
 from flask_oauthlib.client import OAuth
-from . import bp_api
+from . import *
 
 class App(object):
     app = None
