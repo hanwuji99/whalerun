@@ -18,6 +18,7 @@ from flask import Flask, redirect, url_for, session, request, jsonify
 from flask_oauthlib.client import OAuth
 from . import App
 
+
 # global github_oauth
 # oauth = github_oauth.get_oauth()
 # global makeapp
