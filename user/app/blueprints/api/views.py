@@ -16,29 +16,30 @@ from ...utils.pattern_util import check_email
 
 from flask import Flask, redirect, url_for, session, request, jsonify
 from flask_oauthlib.client import OAuth
-# from . import App
+from . import App
 
 
 # global github_oauth
 # oauth = github_oauth.get_oauth()
 # global makeapp
 # app = makeapp.get_app()
-# app = App.get_app()
-# app.debug = True
-# app.secret_key = 'development'
-# oauth = OAuth(app)
+
+app = App.get_app()
+app.debug = True
+app.secret_key = 'development'
+oauth = OAuth(app)
 #
-# github = oauth.remote_app(
-#     'github',
-#     consumer_key='1ec3398f773522ea93a2',
-#     consumer_secret='356740a0ba53c57de3ef794850bedcf61bd84ef3',
-#     request_token_params={'scope': 'user:email'},
-#     base_url='https://api.github.com/',
-#     request_token_url=None,
-#     access_token_method='POST',
-#     access_token_url='https://github.com/login/oauth/access_token',
-#     authorize_url='https://github.com/login/oauth/authorize'
-# )
+github = oauth.remote_app(
+    'github',
+    consumer_key='1ec3398f773522ea93a2',
+    consumer_secret='356740a0ba53c57de3ef794850bedcf61bd84ef3',
+    request_token_params={'scope': 'user:email'},
+    base_url='https://api.github.com/',
+    request_token_url=None,
+    access_token_method='POST',
+    access_token_url='https://github.com/login/oauth/access_token',
+    authorize_url='https://github.com/login/oauth/authorize'
+)
 #
 #
 # @app.route('/index')
