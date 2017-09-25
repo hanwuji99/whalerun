@@ -19,8 +19,9 @@ from flask_oauthlib.client import OAuth
 class App(object):
     app = None
 
-    def set_app(app):
-        App.app = app
+    @classmethod
+    def set_app(cls,app):
+        cls.app = app
 
     @classmethod
     def get_app(cls):
