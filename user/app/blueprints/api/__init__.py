@@ -23,8 +23,9 @@ class App(object):
 
     @classmethod
     def get_app(cls):
-        return App.app
-#
+        return cls.app
+
+
 # class Oauth(object):
 #     def __init__(self,app):
 #         self.oauth = OAuth(app)
