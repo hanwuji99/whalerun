@@ -34,7 +34,7 @@ class App(object):
 
 app = App.get_app()
 # app.debug = True
-app.secret_key = 'development'
+# app.secret_key = 'development'
 oauth = OAuth(app)
 #
 github = oauth.remote_app(
