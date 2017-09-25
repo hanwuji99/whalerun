@@ -33,7 +33,7 @@ class App(object):
 # app = makeapp.get_app()
 
 app = App.get_app()
-app.debug = True
+# app.debug = True
 app.secret_key = 'development'
 oauth = OAuth(app)
 #
