@@ -14,15 +14,7 @@ bp_api.register_error_handler(404, handle_404_error)
 bp_api.register_error_handler(500, handle_500_error)
 bp_api.before_request(before_api_request)
 
-class App(object):
-    app = None
 
-    def set_app(app):
-        App.app = app
-
-    @classmethod
-    def get_app(cls):
-        return cls.app
 
 
         # class Oauth(object):

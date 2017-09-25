@@ -15,8 +15,17 @@ from ...utils.pattern_util import check_email
 
 from flask import Flask, redirect, url_for, session, request, jsonify
 from flask_oauthlib.client import OAuth
-from . import App,bp_api
+from . import bp_api
 
+class App(object):
+    app = None
+
+    def set_app(app):
+        App.app = app
+
+    @classmethod
+    def get_app(cls):
+        return cls.app
 
 # global github_oauth
 # oauth = github_oauth.get_oauth()

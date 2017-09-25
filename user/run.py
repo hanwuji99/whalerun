@@ -2,7 +2,7 @@
 
 from app import create_app
 from app.tasks import celery
-from app.blueprints.api import App
+from app.blueprints.api.views import App
 
 app = create_app()
 if __name__ == '__main__':
