@@ -6,6 +6,9 @@ from flask import Flask, redirect, url_for, session, request, jsonify
 from flask_oauthlib.client import OAuth
 
 app = create_app()
+
+app.debug = True
+app.secret_key = 'development'
 oauth = OAuth(app)
 
 github = oauth.remote_app(
@@ -19,23 +22,29 @@ github = oauth.remote_app(
     access_token_url='https://github.com/login/oauth/access_token',
     authorize_url='https://github.com/login/oauth/authorize'
 )
-#
 
-@app.route('/index')
+
+@app.route('/')
 def index():
     if 'github_token' in session:
         me = github.get('user')
         return jsonify(me.data)
-    return redirect(url_for('github_login'))
+    return redirect(url_for('login'))
 
 
-@app.route('/users/github_login')
-def github_login():
-    return github.authorize(callback=url_for('github_authorized', _external=True))
+@app.route('/login')
+def login():
+    return github.authorize(callback=url_for('authorized', _external=True))
 
 
-@app.route('/users/github_login/authorized')
-def github_authorized():
+@app.route('/logout')
+def logout():
+    session.pop('github_token', None)
+    return redirect(url_for('index'))
+
+
+@app.route('/login/authorized')
+def authorized():
     resp = github.authorized_response()
     if resp is None or resp.get('access_token') is None:
         return 'Access denied: reason=%s error=%s resp=%s' % (
@@ -46,13 +55,6 @@ def github_authorized():
     session['github_token'] = (resp['access_token'], '')
     me = github.get('user')
     return jsonify(me.data)
-
-
-@app.route('/users/logout')
-def logout():
-    session.pop('github_token', None)
-    return redirect(url_for('index'))
-
 
 @github.tokengetter
 def get_github_oauth_token():
