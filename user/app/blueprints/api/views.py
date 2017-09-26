@@ -17,7 +17,8 @@ from flask import Flask, redirect, url_for, session, request, jsonify
 from flask_oauthlib.client import OAuth
 # from . import bp_api
 class App(object):
-    app = None
+    def __init__(self):
+        self.app = None
 
     @classmethod
     def set_app(cls,app):
