@@ -6,6 +6,7 @@ from app.blueprints.api.views import App
 
 app = create_app()
 if __name__ == '__main__':
+    global App
     App.set_app(app)
     app.run(debug=True)
 
