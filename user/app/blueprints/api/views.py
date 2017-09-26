@@ -21,7 +21,7 @@ class App():
 
     def set_app(app):
         App.app = app
-        
+
     @classmethod
     def get_app(cls):
         return App.app
