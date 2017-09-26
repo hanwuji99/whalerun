@@ -7,7 +7,7 @@ from flask_oauthlib.client import OAuth
 
 app = create_app()
 
-app.debug = True
+# app.debug = True
 app.secret_key = 'development'
 oauth = OAuth(app)
 
