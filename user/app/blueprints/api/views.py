@@ -24,16 +24,15 @@ class App(object):
     def set_app(cls,app):
         App.app = app
 
-    @classmethod
-    def get_app(cls):
-        return App.app
+    def get_app(self):
+        return self.app
 
 # global github_oauth
 # oauth = github_oauth.get_oauth()
 # global makeapp
 # app = makeapp.get_app()
-
-app = App.get_app()
+app = App()
+app = app.get_app()
 # app.debug = True
 # app.secret_key = 'development'
 oauth = OAuth(app)
